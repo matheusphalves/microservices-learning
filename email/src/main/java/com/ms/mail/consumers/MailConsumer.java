@@ -18,7 +18,7 @@ public class MailConsumer {
         this.mailService = mailService;
     }
 
-    @RabbitListener(queues = "${broker.queue.ms.email.name}")
+    @RabbitListener(queues = "${broker.queue.ms.mail.name}")
     public void listenEmailQueue(@Payload MailRecordDTO mailRecordDTO) {
 
         MailModel mailModel = new MailModel();

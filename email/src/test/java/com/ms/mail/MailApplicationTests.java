@@ -1,4 +1,4 @@
-package com.ms.email;
+package com.ms.mail;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

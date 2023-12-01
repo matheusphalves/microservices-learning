@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${broker.queue.ms.email.name}")
+    @Value("${broker.queue.ms.mail.name}")
     private String queueName;
 
     @Bean
