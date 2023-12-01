@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record MailRecordDTO(
         UUID userId,
-        String emailTo,
+        String mailTo,
         String subject,
         String text
 ) {
