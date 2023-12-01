@@ -21,8 +21,8 @@ public class UserService {
 
     public UserModel saveUser(UserModel userModel) throws UserException {
 
-        if(userRepository.existsByEmail(userModel.getEmail()))
-            throw new UserException("User with email already exists.");
+        if(userRepository.existsByMailAddress(userModel.getMailAddress()))
+            throw new UserException("User with mailAddress already exists.");
 
         userModel = userRepository.save(userModel);
         userProducer.publishEmailMessage(userModel);

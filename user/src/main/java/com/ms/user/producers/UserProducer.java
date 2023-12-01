@@ -1,6 +1,6 @@
 package com.ms.user.producers;
 
-import com.ms.user.dtos.EmailRecordDTO;
+import com.ms.user.dtos.MailRecordDTO;
 import com.ms.user.models.UserModel;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ public class UserProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${broker.queue.ms.email.name}")
+    @Value("${broker.queue.ms.mail.name}")
     private String routingKey;
 
     public UserProducer(RabbitTemplate rabbitTemplate) {
@@ -21,9 +21,9 @@ public class UserProducer {
 
     public void publishEmailMessage(UserModel userModel) {
 
-        var emailRecordDTO = new EmailRecordDTO(
+        var emailRecordDTO = new MailRecordDTO(
                 userModel.getUserId(),
-                userModel.getEmail(),
+                userModel.getMailAddress(),
                 buildSubject(),
                 this.buildTextMessage(userModel.getName())
         );
@@ -33,8 +33,8 @@ public class UserProducer {
     }
 
     private String buildTextMessage(String userName) {
-        return String.format("Hi %s, this is an automatic email created for educational purposes. " +
-                "This email has been sent because this email address has been associated with user in our application. " +
+        return String.format("Hi %s, this is an automatic mailAddress created for educational purposes. " +
+                "This mailAddress has been sent because this mailAddress address has been associated with user in our application. " +
                 "Please be careful using the internet, don't open suspect links or even download unknown files. " +
                 "This message was possible to be sent due the use of the Spring Framework and the RabbitMQ built in a microservice architectural approach. " +
                 "Best regards, Matheus", userName);
