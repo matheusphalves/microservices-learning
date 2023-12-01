@@ -1,6 +1,6 @@
-package com.ms.email.models;
+package com.ms.mail.models;
 
-import com.ms.email.enums.EmailStatus;
+import com.ms.mail.enums.MailStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,31 +13,31 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "emails")
-public class EmailModel implements Serializable {
+@Table(name = "mails")
+public class MailModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID emailId;
+    private UUID mailId;
     private UUID userId;
-    private String emailFrom;
-    private String emailTo;
+    private String mailFrom;
+    private String mailTo;
     private String subject;
     @Column(columnDefinition = "TEXT")
     private String text;
 
     private LocalDateTime sendDate;
 
-    private EmailStatus status;
+    private MailStatus status;
 
-    public UUID getEmailId() {
-        return emailId;
+    public UUID getMailId() {
+        return mailId;
     }
 
-    public void setEmailId(UUID emailId) {
-        this.emailId = emailId;
+    public void setMailId(UUID mailId) {
+        this.mailId = mailId;
     }
 
     public UUID getUserId() {
@@ -48,20 +48,20 @@ public class EmailModel implements Serializable {
         this.userId = userId;
     }
 
-    public String getEmailFrom() {
-        return emailFrom;
+    public String getMailFrom() {
+        return mailFrom;
     }
 
-    public void setEmailFrom(String emailFrom) {
-        this.emailFrom = emailFrom;
+    public void setMailFrom(String mailFrom) {
+        this.mailFrom = mailFrom;
     }
 
-    public String getEmailTo() {
-        return emailTo;
+    public String getMailTo() {
+        return mailTo;
     }
 
-    public void setEmailTo(String emailTo) {
-        this.emailTo = emailTo;
+    public void setMailTo(String mailTo) {
+        this.mailTo = mailTo;
     }
 
     public String getSubject() {
@@ -88,11 +88,11 @@ public class EmailModel implements Serializable {
         this.sendDate = sendDate;
     }
 
-    public EmailStatus getStatus() {
+    public MailStatus getStatus() {
         return status;
     }
 
-    public void setStatus(EmailStatus status) {
+    public void setStatus(MailStatus status) {
         this.status = status;
     }
 }

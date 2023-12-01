@@ -1,13 +1,13 @@
-package com.ms.email;
+package com.ms.mail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EmailApplication {
+public class MailApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EmailApplication.class, args);
+		SpringApplication.run(MailApplication.class, args);
 	}
 
 }

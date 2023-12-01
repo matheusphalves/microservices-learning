@@ -1,4 +1,4 @@
-package com.ms.email.configs;
+package com.ms.mail.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Queue;
