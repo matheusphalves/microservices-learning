@@ -6,12 +6,12 @@ import com.ms.event.exceptions.SubscriptionNotAllowedException;
 import com.ms.event.exceptions.SubscriptionNotFoundException;
 import com.ms.event.models.Event;
 import com.ms.event.models.Subscription;
+import com.ms.event.producers.SubscriptionProducer;
 import com.ms.event.repositories.EventRepository;
 import com.ms.event.repositories.SubscriptionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +24,25 @@ public class EventService {
     private final EventRepository eventRepository;
     private final SubscriptionRepository subscriptionRepository;
 
-    public EventService(EventRepository eventRepository, SubscriptionRepository subscriptionRepository) {
+    private final SubscriptionProducer subscriptionProducer;
+
+    public EventService(
+            EventRepository eventRepository,
+            SubscriptionRepository subscriptionRepository,
+            SubscriptionProducer subscriptionProducer) {
         this.eventRepository = eventRepository;
         this.subscriptionRepository = subscriptionRepository;
+        this.subscriptionProducer = subscriptionProducer;
     }
 
-    public Event get(UUID id){
-        return eventRepository.getReferenceById(id);
+    public Event get(UUID id) throws EventNotFoundException {
+
+        Optional<Event> event = eventRepository.findById(id);
+
+        if(event.isEmpty())
+            throw new EventNotFoundException(String.format("Event %s not found", id));
+
+        return event.get();
     }
 
     public List<Event> findAll(){
@@ -59,7 +71,8 @@ public class EventService {
         eventRepository.deleteById(eventId);
     }
 
-    public Subscription subscribeParticipant(UUID eventId, String  userEmailAddress) throws EventNotFoundException, SubscriptionNotAllowedException {
+    public Subscription subscribeParticipant(UUID eventId, String  userEmailAddress)
+            throws EventNotFoundException, SubscriptionNotAllowedException {
 
         Optional<Event> eventOptional = eventRepository.findById(eventId);
 
@@ -86,6 +99,8 @@ public class EventService {
 
         event.setRegisteredParticipants(event.getRegisteredParticipants() + 1);
         update(event);
+
+        subscriptionProducer.sendMessage(subscription);
 
         return subscription;
 
