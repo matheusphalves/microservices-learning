@@ -24,7 +24,7 @@ public class MailConsumer {
         MailModel mailModel = new MailModel();
         BeanUtils.copyProperties(mailRecordDTO, mailModel);
 
-        mailService.sendEmail(mailModel);
+        mailService.sendUserAccountConfirmation(mailModel);
     }
 
 }

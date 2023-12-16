@@ -1,5 +1,6 @@
 package com.ms.mail.services;
 
+import com.ms.mail.dtos.MailSubscriptionRecordDTO;
 import com.ms.mail.enums.MailStatus;
 import com.ms.mail.models.MailModel;
 import com.ms.mail.repositories.MailRepository;
@@ -10,6 +11,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+
+import static com.ms.mail.constants.SubscriptionConstants.EMAIL_SUBJECT;
 
 @Service
 public class MailService {
@@ -25,7 +28,7 @@ public class MailService {
         this.emailSender = emailSender;
     }
 
-    public MailModel sendEmail(MailModel mailModel) {
+    public MailModel sendUserAccountConfirmation(MailModel mailModel) {
 
         try{
 
@@ -46,5 +49,32 @@ public class MailService {
         }
 
         return mailRepository.save(mailModel);
+    }
+
+    public MailModel sendUserSubscriptionConfirmation(MailSubscriptionRecordDTO mailSubscriptionRecordDTO){
+
+        MailModel mailModel = new MailModel();
+        try{
+
+            mailModel.setSendDate(LocalDateTime.now());
+            mailModel.setMailFrom(emailFrom);
+            mailModel.setMailTo(mailSubscriptionRecordDTO.userEmailAddress());
+            mailModel.setText(mailSubscriptionRecordDTO.emailContent());
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(mailModel.getMailTo());
+            message.setSubject(mailModel.getSubject());
+            message.setText(mailModel.getText());
+            message.setSubject(EMAIL_SUBJECT);
+
+            emailSender.send(message);
+            mailModel.setStatus(MailStatus.SENT);
+
+        }catch (MailException mailException) {
+            mailModel.setStatus(MailStatus.ERROR);
+        }
+
+        return mailRepository.save(mailModel);
+
     }
 }
