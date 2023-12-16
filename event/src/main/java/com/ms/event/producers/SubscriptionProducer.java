@@ -1,12 +1,12 @@
 package com.ms.event.producers;
 
-import com.fasterxml.jackson.databind.util.JSONWrappedObject;
+import com.ms.event.models.Event;
 import com.ms.event.models.Subscription;
+import org.json.JSONObject;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.ms.event.constants.SubscriptionConstants.*;
 
 @Service
 public class SubscriptionProducer {
@@ -19,16 +19,32 @@ public class SubscriptionProducer {
 
     public void sendMessage(Subscription subscription) {
 
-        Map<String, String> subscriptionProperties = new HashMap<>();
+        JSONObject subscriptionObject = new JSONObject()
+                .put(USER_EMAIL_ADDRESS_KEY, subscription.getUserEmailAddress())
+                .put(EMAIL_CONTENT_KEY, buildTextMessage(subscription));
 
-        subscriptionProperties.put("event-name", subscription.getEvent().getTitle());
-        subscriptionProperties.put("event-description", subscription.getEvent().getDescription());
-        subscriptionProperties.put("event-date", subscription.getEvent().getEventDate().toString());
-        subscriptionProperties.put("user-email-address", subscription.getUserEmailAddress());
-        subscriptionProperties.put("subscribed-at", subscription.getSubscribedAt().toString());
+        kafkaTemplate.send("subscription-request", subscriptionObject.toString());
+    }
+
+    private String buildTextMessage(Subscription subscription) {
 
 
-        kafkaTemplate.send("subscription-request", subscriptionProperties.toString());
+        Event event = subscription.getEvent();
+
+        return String.format(
+                "Hi, this is an automatic mailAddress created for educational purposes.\n" +
+                "Your subscription to event %s has been confirmed.\n" +
+                "Here are some details about the event:\n" +
+                "Event Description: %s \n" +
+                "Event Date: %s \n" +
+                "Subscribed at: %s \n" +
+                "This message was possible to be sent due the use of the Spring Framework and the Apache Kafka built in a microservice architectural approach.\n" +
+                "Best regards, Matheus",
+                event.getTitle(),
+                event.getDescription(),
+                event.getEventDate(),
+                subscription.getSubscribedAt()
+        );
     }
 }
 
